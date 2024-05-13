@@ -1,0 +1,22 @@
+on:
+  push:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::661138919196:role/github-backups
+    - run: |-
+        git bundle create backup.pack ${{ github.ref_name }}
+        aws s3 cp backup.pack s3://engiqueer-git-backups/${{ github.repository }}/$(date -Iseconds).pack
