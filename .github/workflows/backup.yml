@@ -16,6 +16,7 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
+        aws-region: us-east-1
         role-to-assume: arn:aws:iam::661138919196:role/github-backups
     - run: |-
         git bundle create backup.pack ${{ github.ref_name }}
